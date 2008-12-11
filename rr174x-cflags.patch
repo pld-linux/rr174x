@@ -1,0 +1,11 @@
+--- rr174x-linux-src-v2.1/inc/linux/Makefile.def~	2008-03-04 09:12:12.000000000 +0200
++++ rr174x-linux-src-v2.1/inc/linux/Makefile.def	2008-12-11 18:08:58.443688288 +0200
+@@ -140,7 +140,7 @@
+ wrong_target:
+ 	@echo Wrong or missing TARGETTYPE
+ 
+-CFLAGS := $(C_OPTS) $(C_DEFINES) $(C_INCLUDES)
++EXTRA_CFLAGS := $(C_OPTS) $(C_DEFINES) $(C_INCLUDES)
+ 
+ %.o: %.c $(SHARED_HEADERS)
+ 	@echo $(if $V,,[CC] $<)
