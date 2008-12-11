@@ -28,6 +28,7 @@ License:	Proprietary
 Group:		Base/Kernel
 Source0:	http://www.highpoint-tech.com/BIOS_Driver/rr1740/Linux/%{pname}-linux-src-v%{basever}-%{_subver}-1311.tar.gz
 # Source0-md5:	12763d34c8b725ce0c25e3431745e1ce
+Patch0:		%{pname}-cflags.patch
 URL:		http://www.highpoint-tech.com/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.20.2}
@@ -63,19 +64,26 @@ Ten pakiet zawiera moduł jądra Linuksa.
 
 %prep
 %setup -q -n %{pname}-linux-src-v%{basever}
-%{__sed} -i -e 's,\r$,,' README
+%{__sed} -i -e 's,\r$,,' README inc/linux/Makefile.def
+%patch0 -p1
 
 %build
 %if %{with kernel}
+pwd=$(pwd)
 cd product/rr1740pm/linux
-%build_kernel_modules -m rr174x
+# XXX: fool build macro
+touch rr174x.ko
+%build_kernel_modules -m rr174x KERNELDIR=$(pwd)/o KERNEL_VER=2.6 HPT_ROOT="$pwd"
+# XXX. it didn't build module with above...
+%{__make} KERNELDIR=$(pwd)/o
+mv -f rr174x{,-dist}.ko
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with kernel}
-%install_kernel_modules -m rr174x -d kernel/misc
+%install_kernel_modules -m product/rr1740pm/linux/rr174x -d kernel/misc
 %endif
 
 %clean
