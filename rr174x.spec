@@ -65,7 +65,7 @@ Ten pakiet zawiera moduł jądra Linuksa.
 %prep
 %setup -q -n %{pname}-linux-src-v%{basever}
 %{__sed} -i -e 's,\r$,,' README inc/linux/Makefile.def
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %if %{with kernel}
